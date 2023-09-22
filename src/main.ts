@@ -20,7 +20,7 @@ class Router{
             }
             
             appRoot.innerHTML = template;
-
+            new component();
             setRouteEvent();
         }
     }
@@ -39,17 +39,64 @@ class Router{
     }
 }
 
+class ComponentBase{
+    constructor() {
+        setTimeout(()=> this.scanDOMForNgModels(),0);
+        setTimeout(()=> this.scanDOMForOnClick(),0);
+    }
+
+    scanDOMForNgModels(){
+        const elements = document.querySelectorAll("[ngModel]");
+        for(const el of elements){
+            const bindingValue = el.getAttribute("ngModel");
+            if(bindingValue){
+                let componentInstance:any = this;
+                while(componentInstance && !Object.prototype.hasOwnProperty.call(componentInstance, bindingValue)){
+                    componentInstance = Object.getPrototypeOf(componentInstance);
+                }
+
+                if(componentInstance){
+                    el.addEventListener("keyup", e=> {
+                        componentInstance[bindingValue] = (e.target as HTMLInputElement).value;
+                    })
+                }
+            }
+        }
+    }
+
+    scanDOMForOnClick(){
+        const buttons = document.querySelectorAll("[onclick]");
+        for(const el of buttons){
+            const methodName = el.getAttribute("onclick");
+            if(methodName){
+                el.addEventListener("click", ()=> {
+                    if(typeof this[methodName] === "function"){
+                        this[methodName]();
+                    }
+                })
+            }
+        }
+    }
+
+}
+
 //App Cpomponent
 @Component({
     template: `
     <h1>App Component</h1>
+    <input ngModel="work">
+    <button onclick="showWork">Show work</button>
     <button route="home">Home Component</button>
     <button route="app">App Component</button>
     <button route="about">About Component</button>
     `
 })
-class AppComponent{
+class AppComponent extends ComponentBase{
+work: string = "";
 
+showWork(){
+    console.log(this.work);
+}
 }
 
 //Home Component
@@ -64,15 +111,47 @@ class HomeComponent{
     }
 }
 
+
+
 @Component({
     template: `
     <h1>About Component</h1>
+    <input ngModel="name">
+    <button id="show" onclick="showName">Show Input Value</button>
     <button route="home">Home Component</button>
     <button route="app">App Component</button>
     <button route="about">About Component</button>
     `
 })
-class AboutComponent{    
+class AboutComponent extends ComponentBase{  
+    name: string = "";
+
+    showName(){
+        console.log(this.name);
+    }
+
+    // constructor(){
+    //     //this.setupBindings();
+    // }
+
+
+    // setupBindings(){
+    //     const inputEl = document.querySelector("input");
+    //     if(inputEl){
+    //         inputEl.addEventListener("keyup", (e)=> {
+    //             this.name = (e.target as HTMLInputElement).value;
+    //         })
+    //     }
+
+    //     const buttonEl = document.getElementById("show");        
+    //     if(buttonEl){            
+    //         buttonEl.addEventListener("click", ()=> {                
+    //             this.showName();
+    //         })
+    //     }
+    // }
+
+    
 }
 
 function setRouteEvent(){

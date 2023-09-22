@@ -1,4 +1,3 @@
-"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -30,6 +29,7 @@ class Router {
                     template = yield fetchTemplate(new component().templateUrl);
                 }
                 appRoot.innerHTML = template;
+                new component();
                 setRouteEvent();
             }
         });
@@ -48,13 +48,58 @@ class Router {
         return AppComponent;
     }
 }
+class ComponentBase {
+    constructor() {
+        setTimeout(() => this.scanDOMForNgModels(), 0);
+        setTimeout(() => this.scanDOMForOnClick(), 0);
+    }
+    scanDOMForNgModels() {
+        const elements = document.querySelectorAll("[ngModel]");
+        for (const el of elements) {
+            const bindingValue = el.getAttribute("ngModel");
+            if (bindingValue) {
+                let componentInstance = this;
+                while (componentInstance && !Object.prototype.hasOwnProperty.call(componentInstance, bindingValue)) {
+                    componentInstance = Object.getPrototypeOf(componentInstance);
+                }
+                if (componentInstance) {
+                    el.addEventListener("keyup", e => {
+                        componentInstance[bindingValue] = e.target.value;
+                    });
+                }
+            }
+        }
+    }
+    scanDOMForOnClick() {
+        const buttons = document.querySelectorAll("[onclick]");
+        for (const el of buttons) {
+            const methodName = el.getAttribute("onclick");
+            if (methodName) {
+                el.addEventListener("click", () => {
+                    if (typeof this[methodName] === "function") {
+                        this[methodName]();
+                    }
+                });
+            }
+        }
+    }
+}
 //App Cpomponent
-let AppComponent = class AppComponent {
+let AppComponent = class AppComponent extends ComponentBase {
+    constructor() {
+        super(...arguments);
+        this.work = "";
+    }
+    showWork() {
+        console.log(this.work);
+    }
 };
 AppComponent = __decorate([
     Component({
         template: `
     <h1>App Component</h1>
+    <input ngModel="work">
+    <button onclick="showWork">Show work</button>
     <button route="home">Home Component</button>
     <button route="app">App Component</button>
     <button route="about">About Component</button>
@@ -74,12 +119,38 @@ HomeComponent = __decorate([
         templateUrl: `/public/home.component.html`
     })
 ], HomeComponent);
-let AboutComponent = class AboutComponent {
+let AboutComponent = class AboutComponent extends ComponentBase {
+    constructor() {
+        super(...arguments);
+        this.name = "";
+        // constructor(){
+        //     //this.setupBindings();
+        // }
+        // setupBindings(){
+        //     const inputEl = document.querySelector("input");
+        //     if(inputEl){
+        //         inputEl.addEventListener("keyup", (e)=> {
+        //             this.name = (e.target as HTMLInputElement).value;
+        //         })
+        //     }
+        //     const buttonEl = document.getElementById("show");        
+        //     if(buttonEl){            
+        //         buttonEl.addEventListener("click", ()=> {                
+        //             this.showName();
+        //         })
+        //     }
+        // }
+    }
+    showName() {
+        console.log(this.name);
+    }
 };
 AboutComponent = __decorate([
     Component({
         template: `
     <h1>About Component</h1>
+    <input ngModel="name">
+    <button id="show" onclick="showName">Show Input Value</button>
     <button route="home">Home Component</button>
     <button route="app">App Component</button>
     <button route="about">About Component</button>
