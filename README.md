@@ -27,6 +27,7 @@ You can easily generate new components using the CLI.
 
 ```bash
 ts component about
+ts c about
 ```
 
 This will generate a new component named `about` under `src/components`, and also place its HTML output inside the `/public` directory.
@@ -52,6 +53,30 @@ To start the application, run the following command:
 ```bash
 ts start
 ```
+
+## Routing
+
+To navigate between different components, you can simply add a `route` attribute to any HTML element. For example:
+
+```html
+<button route="app">App Component</button>
+```
+
+In the `src` directory, you'll have a function `staticRoute` to map the route to the corresponding component:
+
+```typescript
+import { AppComponent } from "./components/app.component";
+
+export function staticRoute(path: string){
+    if(path === "app"){
+        return AppComponent;
+    }
+
+    return AppComponent;
+}
+```
+
+This function takes the path (e.g., "app") as an argument and returns the corresponding component (`AppComponent` in this case).
 
 This will start the dev server and open your app at `http://localhost:8080`.
 
