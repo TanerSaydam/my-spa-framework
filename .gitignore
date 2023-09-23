@@ -1,2 +1,5 @@
 /node_modules
 /dist
+
+/my-spa-cli/node_modules
+/my-spa-cli/dist
