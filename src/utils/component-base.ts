@@ -1,4 +1,5 @@
 export class ComponentBase{
+    [key:string]: any;
     constructor() {
         setTimeout(()=> this.scanDOMForNgModels(),0);
         setTimeout(()=> this.scanDOMForOnClick(),0);

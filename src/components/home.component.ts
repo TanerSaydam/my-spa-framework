@@ -1,7 +1,7 @@
 import { Component } from "../utils/decarators";
 
 @Component({
-    templateUrl: `/public/home.component.html`
+    templateUrl: `./home.component.html`
 })
 export class HomeComponent{
     name: string = "Taner";
