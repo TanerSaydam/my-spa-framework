@@ -1,6 +1,6 @@
 {
   "name": "ts-spa-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A CLI tool for accelerating SPA development.",
   "main": "index.js",
   "scripts": {
