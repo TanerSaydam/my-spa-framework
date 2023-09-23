@@ -1,6 +1,5 @@
 # My TypeScript SPA Framework
 
-[![Build Status](https://travis-ci.org/TanerSaydam/my-spa-framework.svg?branch=master)](https://travis-ci.org/TanerSaydam/my-spa-framework)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 My TypeScript SPA Framework is a modern front-end framework for building scalable and maintainable single-page applications (SPA). The framework is capable of creating class components, performing routing, and rendering lists and variables with minimal setup.
