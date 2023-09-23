@@ -18,7 +18,7 @@ You can use our custom CLI to install and create a new application.
 
 ```bash
 npm install -g ts-spa-cli
-ts new my-app
+ts new -n project_name
 ```
 
 ## Create New Components
@@ -26,8 +26,8 @@ ts new my-app
 You can easily generate new components using the CLI.
 
 ```bash
-ts component about
-ts c about
+ts component --name component_name
+ts c --name component_name
 ```
 
 This will generate a new component named `about` under `src/components`, and also place its HTML output inside the `/public` directory.
